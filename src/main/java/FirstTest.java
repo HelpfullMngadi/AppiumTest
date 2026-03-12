@@ -88,10 +88,15 @@ public class FirstTest {
     }
 
     public void captureScreenshot(String testName) {
-        File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        // This line ensures the folder exists
+        File targetLayer = new File("screenshots");
+        if (!targetLayer.exists()) {
+            targetLayer.mkdir();
+        }
+
         try {
-            // Saves the screenshot to a 'screenshots' folder in your project
-            FileUtils.copyFile(srcFile, new File("screenshots/" + testName + ".png"));
+            FileUtils.copyFile(scrFile, new File("screenshots/" + testName + ".png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
