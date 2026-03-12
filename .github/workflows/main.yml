@@ -1,0 +1,21 @@
+name: Appium Physical Device Test
+on: [push]
+
+jobs:
+  build:
+    # This is the secret sauce: it looks for your local machine
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Run Appium Tests
+        # Since Appium is already installed on your PC, we just trigger the test
+        run: mvn test
