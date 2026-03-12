@@ -1,11 +1,18 @@
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
@@ -70,10 +77,24 @@ public class FirstTest {
     }
 
     @AfterTest
-    public void close() {
+    public void close(ITestResult result) {
+        if (ITestResult.FAILURE == result.getStatus()) {
+            captureScreenshot(result.getName());
+        }
 
-        driver.quit();
+        if (driver != null) {
+            driver.quit();
+        }
+    }
 
+    public void captureScreenshot(String testName) {
+        File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        try {
+            // Saves the screenshot to a 'screenshots' folder in your project
+            FileUtils.copyFile(srcFile, new File("screenshots/" + testName + ".png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

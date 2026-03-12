@@ -1,5 +1,5 @@
 name: Appium Physical Device Test
-on: [push]
+on: [ push ]
 
 jobs:
   build:
@@ -19,3 +19,10 @@ jobs:
       - name: Run Appium Tests
         # Since Appium is already installed on your PC, we just trigger the test
         run: mvn test
+
+      - name: Upload Screenshots on Failure
+        uses: actions/upload-artifact@v4
+        if: failure() # This only runs if the previous step (the test) fails
+        with:
+                name: failure-screenshots
+                path: screenshots/
