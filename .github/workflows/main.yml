@@ -3,7 +3,6 @@ on: [ push ]
 
 jobs:
   build:
-    # This is the secret sauce: it looks for your local machine
     runs-on: self-hosted
 
     steps:
@@ -17,12 +16,12 @@ jobs:
           distribution: 'temurin'
 
       - name: Run Appium Tests
-        # Since Appium is already installed on your PC, we just trigger the test
-        run: mvn test
+        # Using "mvn clean test" ensures old build files don't interfere
+        run: mvn clean test
 
       - name: Upload Screenshots on Failure
         uses: actions/upload-artifact@v4
-        if: failure() # This only runs if the previous step (the test) fails
+        if: failure()
         with:
-                name: failure-screenshots
-                path: screenshots/
+          name: failure-screenshots
+          path: screenshots/
