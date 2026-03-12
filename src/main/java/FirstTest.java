@@ -3,6 +3,7 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import java.net.MalformedURLException;
@@ -26,12 +27,6 @@ public class FirstTest {
         options.setAutomationName("UiAutomator2");// "uiautomator2" also works (case-insensitive)
         options.setApp(appPath);//("user.dir") + "/apps/ApiDemos.apk");
 
-        options.setAppActivity("com.wiseasy.cashier.Sale"); // Replace with the actual Purchase activity name
-        options.setNoReset(true);
-
-        /*options.setAppActivity("com.wiseasy.cashier.Transactions"); // Replace with the actual Purchase activity name
-        options.setNoReset(true);*/
-
         try {
             driver = new AndroidDriver(new URL(appiumServerUrl), options);
         } catch (MalformedURLException e) {
@@ -43,37 +38,43 @@ public class FirstTest {
     public void test() {
         //driver.findElement(AppiumBy.androidUIAutomator("new UiSelector().text(\"Sign in\")")).click();.
 
-        // 1. Create a wait object (10 seconds max)
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        // 1. Create a wait object (50 seconds max)
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(100));
 
-        //login Test
-       /* wait.until(ExpectedConditions.visibilityOfElementLocated(
+        // 1. Click Sign In
+        wait.until(ExpectedConditions.elementToBeClickable(
                 AppiumBy.androidUIAutomator("new UiSelector().text(\"Sign in\")")
-        )).click();*/
+        )).click();
 
-        //WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        // 2. Fast-click to the Purchase screen
+        // (Using the selector you found in the Inspector)
+        wait.until(ExpectedConditions.elementToBeClickable(
+                AppiumBy.androidUIAutomator("new UiSelector().className(\"android.view.View\").instance(9)")
+        )).click();
 
-        //Purchase Test
-      /*  wait.until(ExpectedConditions.visibilityOfElementLocated(
+        // 3. Press 1
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
                 AppiumBy.androidUIAutomator("new UiSelector().className(\"android.widget.Button\").instance(0)")
         )).click();
 
+        // 4. Press Pay
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 AppiumBy.androidUIAutomator("new UiSelector().className(\"android.widget.Button\").instance(12)")
-        )).click();*/
+        )).click();
 
-       /* wait.until(ExpectedConditions.visibilityOfElementLocated(
-                AppiumBy.androidUIAutomator("new UiSelector().text(\"Purchase\")")
-        )).click();*/
+        // Differentiates by finding 'OK' inside the same container as the header
+        wait.until(ExpectedConditions.elementToBeClickable(
+                AppiumBy.androidUIAutomator("new UiSelector().text(\"OK\")")
+        )).click();
 
     }
 
-    /*@AfterTest
+    @AfterTest
     public void close() {
 
         driver.quit();
 
-    }*/
+    }
 }
 
 
