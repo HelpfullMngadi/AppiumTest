@@ -25,14 +25,19 @@ public class FirstTest {
     public void setup() {
 
         //Server Url
-        String appiumServerUrl = "http://127.0.0.1:4723";// or http://127.0.0.1:4723/  (both usually work)
+        String appiumServerUrl = "http://127.0.0.1:4723/";
         // Modern replacement
         UiAutomator2Options options = new UiAutomator2Options();
-        String appPath = System.getProperty("user.dir") + "/.idea/apps/Cashier.apk";
+        String appPath = System.getProperty("user.dir") + File.separator + "apps" + File.separator + "Cashier.apk";
 
         options.setPlatformName("ANDROID");
         options.setAutomationName("UiAutomator2");// "uiautomator2" also works (case-insensitive)
         options.setApp(appPath);//("user.dir") + "/apps/ApiDemos.apk");
+
+        File reportDir = new File("screenshots");
+        if (!reportDir.exists()) {
+            reportDir.mkdirs();
+        }
 
         try {
             driver = new AndroidDriver(new URL(appiumServerUrl), options);
@@ -76,14 +81,10 @@ public class FirstTest {
 
     }
 
-    @AfterTest
-    public void close(ITestResult result) {
-        if (ITestResult.FAILURE == result.getStatus()) {
+    @org.testng.annotations.AfterMethod // Change this from AfterTest
+    public void tearDown(ITestResult result) {
+        if (result.getStatus() == ITestResult.FAILURE) {
             captureScreenshot(result.getName());
-        }
-
-        if (driver != null) {
-            driver.quit();
         }
     }
 
