@@ -86,6 +86,10 @@ public class FirstTest {
         if (result.getStatus() == ITestResult.FAILURE) {
             captureScreenshot(result.getName());
         }
+
+        if (driver != null) {
+            driver.quit();
+        }
     }
 
     public void captureScreenshot(String testName) {
